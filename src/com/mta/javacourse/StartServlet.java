@@ -27,8 +27,8 @@ public class StartServlet extends HttpServlet {
 		
 		// Homework #2
 		
-		String line1 = new String("calculation 1: Area of circle with radius " + radius + " is " + Math.PI*Math.pow(radius, 2) + " square-cm." );
-		String line2 = new String("calculation 2: Length of opposite where angle B is 30 degrees and Hypotenuse length is 50 cm is: " + 50*Math.sin(angelB) + " cm");
+		String line1 = new String("calculation 1: Area of circle with radius " + radius + " is " + Math.PI * Math.pow(radius, 2) + " square-cm." );
+		String line2 = new String("calculation 2: Length of opposite where angle B is 30 degrees and Hypotenuse length is 50 cm is: " + 50 * Math.sin(angelB) + " cm");
 		String line3 = new String("calculation 3: Power of 20 with exp of 13 is " + Math.pow(20, 13));
 		
 		String resultStr2 = line1 + "<br>" + line2 + "<br>" +line3;
