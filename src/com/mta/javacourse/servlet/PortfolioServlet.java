@@ -10,12 +10,16 @@ import com.mta.javacourse.Stock;
 import com.mta.javacourse.model.Portfolio;
 import com.mta.javacourse.service.PortfolioService;
 
+@SuppressWarnings("serial")
 public class PortfolioServlet extends HttpServlet { 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		resp.setContentType("text/html");
+		
 		PortfolioService portfolioService = new PortfolioService();
-		//Portfolio portfolio = portfolioService.getPortfolio();
-		//Stock[] stocks = portfolio.getStocks();
-	}
+		Portfolio portfolio = portfolioService.getPortfolio();
+		Stock[] stocks = portfolio.getStocks();
 
+		resp.getWriter().println(portfolio.getHtmlString());
+	}
 }
