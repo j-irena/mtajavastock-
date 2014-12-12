@@ -49,6 +49,17 @@ public class Portfolio {
 			this.stocks[portfolioSize++] = stock;
 		}	
 	}
+
+	/**
+	 * Removing the first stock from the portfolio.
+	 */
+	public void removeFirstStock(Portfolio p) {
+		for(int i = 0; i < portfolioSize; i++) {
+			stocks[i] = stocks[i + 1];
+		}
+		this.portfolioSize = portfolioSize-1;
+	}
+
 	public Stock[] getStocks() {
 		return stocks;	
 	}
@@ -173,15 +184,5 @@ public class Portfolio {
 		public void setStockQuantity(int stockQuantity) {
 			this.stockQuantity = stockQuantity;
 		}
-	}
-	
-	/**
-	 * Removing the first stock from the portfolio.
-	 */
-	public void removeFirstStock(Portfolio p) {
-		for(int i = 0; i < portfolioSize; i++) {
-			stocks[i] = stocks[i + 1];
-		}
-		this.portfolioSize = portfolioSize-1;
 	}
 }

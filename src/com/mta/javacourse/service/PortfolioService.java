@@ -28,7 +28,7 @@ public class PortfolioService {
 		 *  Each stock is added to myPorfolio.
 		 *  myPortfolio is returned.
 		 */
-		
+
 		Stock st1 = new Stock("PIH", (float)12.4, (float)13.1, myDate);
 		myPortfolio.addStock(st1);
 

@@ -42,7 +42,7 @@ public class PortfolioServlet extends HttpServlet  {
 
 		resp.getWriter().println(portfolio.getHtmlString());
 		resp.getWriter().println(portfolioCopy.getHtmlString());
-		
+
 		/**
 		 * Changing the bid value in the third stock of the copy portfolio.
 		 */
@@ -50,7 +50,6 @@ public class PortfolioServlet extends HttpServlet  {
 
 		resp.getWriter().println(portfolio.getHtmlString());
 		resp.getWriter().println(portfolioCopy.getHtmlString());
-
 
 		resp.setContentType("text/html");
 	}	
