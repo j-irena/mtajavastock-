@@ -24,17 +24,19 @@ public class Portfolio {
 	}
 	/** 
 	 * Portfolio copy c'tor
+	 * @param p
 	 */
-	public Portfolio (Portfolio p) { 
-		this.stocks = new Stock[portfolioSize];
-		this.stocksStatus = new StockStatus[portfolioSize];
-		
-		for(int i = 0; i < p.portfolioSize; i++) {  
-			this.stocks[i] = new Stock(p.stocks[i]);    
-			this.stocksStatus[i] = new StockStatus(p.stocksStatus[i]);
+	public Portfolio(Portfolio p){
+		this();
+
+		for(int i = 0; i < p.portfolioSize; i++){
+			this.stocks[i] = new Stock(p.stocks[i]);
 		}
-		this.portfolioSize = p.portfolioSize;
-		this.title = p.title;
+		for(int i = 0; i < portfolioSize; i++){
+			this.stocksStatus[i] = new StockStatus(p.stocksStatus[i]); 
+		}
+		setPortfolioSize(p.portfolioSize);
+		setTitle(p.title);
 	}
 
 	/**
@@ -42,12 +44,12 @@ public class Portfolio {
 	 * Each stock increases portfolioSize by one, so that the next stock would
 	 * be placed in the next location of the stock array. 
 	 */
-	public void addStock (Stock stock){
-		if (this.portfolioSize < MAX_PORTFOLIO_SIZE){
-			this.stocks[this.portfolioSize++] = stock;
+	public void addStock (Stock stock) {
+		if (this.portfolioSize < MAX_PORTFOLIO_SIZE) {
+			this.stocks[portfolioSize++] = stock;
 		}	
 	}
-	public Stock[] getStocks(){
+	public Stock[] getStocks() {
 		return stocks;	
 	}
 
@@ -59,6 +61,10 @@ public class Portfolio {
 		this.stocksStatus = stocksStatus;
 	}
 
+	public void setPortfolioSize(int portfolioSize) {
+		this.portfolioSize = portfolioSize;
+	}		
+
 	public int getPortfolioSize() {
 		return portfolioSize;
 	}
@@ -67,7 +73,7 @@ public class Portfolio {
 		this.title = title;
 	}	
 
-	public String getTitle(){
+	public String getTitle() {
 		return title;
 	}
 
@@ -79,10 +85,9 @@ public class Portfolio {
 	 * @param res contains a string of the title and the stocks array details.
 	 * @return the title and the stock array details.  
 	 */
-	public String getHtmlString(){
+	public String getHtmlString() {
 		String res = "<h1>" + title + "</h1>" + "<br>";
-		for (int i = 0; i < portfolioSize; i++)
-		{
+		for (int i = 0; i < portfolioSize; i++) {
 			res += stocks[i].getHtmlDescription() + "<br>";
 		}
 		return res;
@@ -108,7 +113,7 @@ public class Portfolio {
 		 * StockStatus copy c'tor
 		 * @param stockStatus
 		 */
-		public StockStatus(String s, float cb, float ca, Date d, int r, int sq){
+		public StockStatus(String s, float cb, float ca, Date d, int r, int sq) {
 			this.setSymbol(s);
 			this.setCurrentBid(cb);
 			this.setCurrentAsk(ca);
@@ -117,7 +122,7 @@ public class Portfolio {
 			this.setStockQuantity(sq);
 		}
 
-		public StockStatus(StockStatus st){
+		public StockStatus(StockStatus st) {
 			this(st.symbol, st.currentBid, st.currentAsk, st.date, st.recommendation, st.stockQuantity);
 		}
 
@@ -168,5 +173,14 @@ public class Portfolio {
 		public void setStockQuantity(int stockQuantity) {
 			this.stockQuantity = stockQuantity;
 		}
+	}
+	/**
+	 * Removing the first stock from the portfolio.
+	 */
+	public void removeFirstStock(Portfolio p) {
+		for(int i = 0; i < portfolioSize; i++) {
+			stocks[i] = stocks[i + 1];
+		}
+		this.portfolioSize = portfolioSize-1;
 	}
 }

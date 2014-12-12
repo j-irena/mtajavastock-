@@ -7,25 +7,27 @@ import java.util.Date;
  * 
  * @author Irena Yakobovich date 25th of November 2014
  */
+
 public class Stock {
 	private String symbol;
 	private float ask;
 	private float bid;
-	private java.util.Date date;
+	private Date date;
 	private String htmlDescription;
 
 	/**
 	 * Stock c'tor
-	 * @param a
-	 * @param b
-	 * @param c
-	 * @param d
+	 * @param symbol
+	 * @param ask
+	 * @param bid
+	 * @param date
 	 */
-	public Stock(String a, float b, float c, Date d) {
-		this.setSymbol(a);
-		this.setAsk(b);
-		this.setBid(c);
-		this.setDate(d);
+
+	public Stock(String symbol, float ask, float bid, Date date) {
+		this.setSymbol(symbol);
+		this.setAsk(ask);
+		this.setBid(bid);
+		this.setDate(date);
 	}
 
 	/**

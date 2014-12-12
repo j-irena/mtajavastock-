@@ -15,20 +15,59 @@ import com.mta.javacourse.service.PortfolioService;
  * date 10th of December 2014
  */
 @SuppressWarnings("serial")
-public class PortfolioServlet extends HttpServlet { 
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-		resp.setContentType("text/html");
-		
+public class PortfolioServlet extends HttpServlet  {	
+	/**
+	 * Request and Response from the user in HTML
+	 */
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
 		PortfolioService portfolioService = new PortfolioService();
 		Portfolio portfolio = portfolioService.getPortfolio();
-		Stock[] stocks = portfolio.getStocks();
+		Stock[] stocks = portfolio.getStocks();	
+		portfolio.setTitle("Portfolio #1");
 
-		Portfolio portfolioCopy = new Portfolio();
+		/** 
+		 * Creating another portfolio, which is a copy of the previous one.
+		 */
+		Portfolio portfolioCopy = new Portfolio(portfolio);
 		portfolioCopy.setTitle("Portfolio #2");
 
 		resp.getWriter().println(portfolio.getHtmlString());
 		resp.getWriter().println(portfolioCopy.getHtmlString());
 
-	}
+		/**
+		 * Removing the first stock from the first portfolio.
+		 */
+		portfolio.removeFirstStock(portfolio);
+
+		resp.getWriter().println(portfolio.getHtmlString());
+		resp.getWriter().println(portfolioCopy.getHtmlString());
+
+		portfolioCopy.getStocks()[2].setBid(55.55f);
+
+		resp.getWriter().println(portfolio.getHtmlString());
+		resp.getWriter().println(portfolioCopy.getHtmlString());
+
+
+		resp.setContentType("text/html");
+	}	
 }
+
+//public class PortfolioServlet extends HttpServlet { 
+//	public void doGet(HttpServletRequest req, HttpServletResponse resp)
+//			throws IOException {
+//		resp.setContentType("text/html");
+//		
+//		PortfolioService portfolioService = new PortfolioService();
+//		Portfolio portfolio = portfolioService.getPortfolio();
+//		Stock[] stocks = portfolio.getStocks();
+//
+//		Portfolio portfolioCopy = new Portfolio();
+//		portfolioCopy.setTitle("Portfolio #2");
+//
+//		resp.getWriter().println(portfolio.getHtmlString());
+//		resp.getWriter().println(portfolioCopy.getHtmlString());
+//	}
+//
+
+//}
