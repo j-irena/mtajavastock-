@@ -174,6 +174,7 @@ public class Portfolio {
 			this.stockQuantity = stockQuantity;
 		}
 	}
+	
 	/**
 	 * Removing the first stock from the portfolio.
 	 */

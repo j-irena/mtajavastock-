@@ -42,7 +42,10 @@ public class PortfolioServlet extends HttpServlet  {
 
 		resp.getWriter().println(portfolio.getHtmlString());
 		resp.getWriter().println(portfolioCopy.getHtmlString());
-
+		
+		/**
+		 * Changing the bid value in the third stock of the copy portfolio.
+		 */
 		portfolioCopy.getStocks()[2].setBid(55.55f);
 
 		resp.getWriter().println(portfolio.getHtmlString());
@@ -52,22 +55,3 @@ public class PortfolioServlet extends HttpServlet  {
 		resp.setContentType("text/html");
 	}	
 }
-
-//public class PortfolioServlet extends HttpServlet { 
-//	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-//			throws IOException {
-//		resp.setContentType("text/html");
-//		
-//		PortfolioService portfolioService = new PortfolioService();
-//		Portfolio portfolio = portfolioService.getPortfolio();
-//		Stock[] stocks = portfolio.getStocks();
-//
-//		Portfolio portfolioCopy = new Portfolio();
-//		portfolioCopy.setTitle("Portfolio #2");
-//
-//		resp.getWriter().println(portfolio.getHtmlString());
-//		resp.getWriter().println(portfolioCopy.getHtmlString());
-//	}
-//
-
-//}
