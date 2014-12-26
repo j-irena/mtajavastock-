@@ -77,7 +77,7 @@ public class Portfolio {
 			portfolioSize++;
 		}
 	}
-	
+
 	/**
 	 * Searches for the index of the symbol in the stock array
 	 * @param symbol
