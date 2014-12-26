@@ -126,7 +126,7 @@ public class Portfolio {
 	}
 
 	/**
-	 * Sells stock
+	 * Sell stocks
 	 * @param symbol
 	 * @return
 	 */
@@ -155,6 +155,12 @@ public class Portfolio {
 		return true;
 	}
 
+	/**
+	 * Buy Stocks
+	 * @param symbol
+	 * @param quantity
+	 * @return
+	 */
 	public boolean buyStock (String symbol, int quantity) {
 
 		int index = findSymbolIndex(symbol);
