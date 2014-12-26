@@ -22,22 +22,31 @@ public class PortfolioService {
 		Calendar calendar = Calendar.getInstance(); 
 		calendar.set(2014, 10, 15);
 		Date myDate = calendar.getTime();
-
+		
+		myPortfolio.setBalance(10000);
+		myPortfolio.setTitle("Exercise 7 portfolio");
+		
 		/**
 		 *  Setting information concerning to each stock, including symbol, ask, bid and date.
 		 *  Each stock is added to myPorfolio.
 		 *  myPortfolio is returned.
 		 */
 
-		Stock st1 = new Stock("PIH", (float)12.4, (float)13.1, myDate);
+		Stock st1 = new Stock("PIH", (float)10, (float)8.5, myDate);
 		myPortfolio.addStock(st1);
 
-		Stock st2 = new Stock("AAL", (float)5.5, (float)5.78, myDate);
+		Stock st2 = new Stock("AAL", (float)30, (float)25.5, myDate);
 		myPortfolio.addStock(st2);
 
-		Stock st3 = new Stock("CAAS", (float)31.5, (float)31.2, myDate);
+		Stock st3 = new Stock("CAAS", (float)20, (float)15.5, myDate);
 		myPortfolio.addStock(st3);
-
+		
+		myPortfolio.buyStock("PIH", 20);
+		myPortfolio.buyStock("AAL", 30);
+		myPortfolio.buyStock("CAAS", 40);
+		myPortfolio.sellStock("AAL", -1);
+		myPortfolio.removeStock("CAAS");
+		
 		return myPortfolio;
 	}
 }

@@ -24,10 +24,10 @@ public class Stock {
 	 */
 
 	public Stock(String symbol, float ask, float bid, Date date) {
-		this.setSymbol(symbol);
-		this.setAsk(ask);
-		this.setBid(bid);
-		this.setDate(date);
+		setSymbol(symbol);
+		setAsk(ask);
+		setBid(bid);
+		setDate(date);
 	}
 
 	/**
@@ -71,12 +71,13 @@ public class Stock {
 	}
 
 	/**
-	 * A method that gathers information of the stock and returns it.
+	 * Gathers information of the stock and returns it.
 	 */
 	public String getHtmlDescription() {
 		htmlDescription = "<b>Stock symbol is </b>" + getSymbol()
 				+ ",<b> ask: </b>" + getAsk() + ",<b> bid: </b>" + getBid()
 				+ ",<b> date: </b>" + getDate();
 		return htmlDescription;
+		
 	}
 }
