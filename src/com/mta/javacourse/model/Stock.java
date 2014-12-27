@@ -9,10 +9,10 @@ import java.util.Date;
  */
 
 public class Stock {
-	private String symbol;
-	private float ask;
-	private float bid;
-	private Date date;
+	protected String symbol;
+	protected float ask;
+	protected float bid;
+	protected Date date;
 	private String htmlDescription;
 
 	/**

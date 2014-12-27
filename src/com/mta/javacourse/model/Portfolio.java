@@ -1,7 +1,5 @@
 package com.mta.javacourse.model;
 
-import java.util.Date;
-
 /**
  * Definition of stock portfolio: contains arrays of stocks and it's status. 
  * @author Irena Yakobovich
@@ -10,18 +8,15 @@ import java.util.Date;
 public class Portfolio {
 	private final static int MAX_PORTFOLIO_SIZE = 5;
 	enum ALGO_RECOMMENDATION{DO_NOTHING, BUY, SELL};
-	private Stock[] stocks;
 	private StockStatus[] stockStatus;
 	private int portfolioSize;
 	private String title;
 	private float balance;
 
 	/** 
-	 * Stock portfolio contains a max number of an array of stocks,
-	 * and a max number of an array of stock status.
+	 * Stock portfolio contains an array of stocks and it's status.
 	 */
 	public Portfolio() {
-		stocks = new Stock[MAX_PORTFOLIO_SIZE];
 		stockStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
 		portfolioSize = 0;
 	}
@@ -33,9 +28,6 @@ public class Portfolio {
 	public Portfolio(Portfolio p){
 		this();
 
-		for(int i = 0; i < p.portfolioSize; i++){
-			stocks[i] = new Stock(p.stocks[i]);
-		}
 		for(int i = 0; i < portfolioSize; i++){
 			stockStatus[i] = new StockStatus(p.stockStatus[i]); 
 		}
@@ -72,7 +64,6 @@ public class Portfolio {
 		}
 
 		else {
-			stocks[portfolioSize] = stock;
 			stockStatus[portfolioSize] = new StockStatus(stock);
 			portfolioSize++;
 		}
@@ -87,7 +78,7 @@ public class Portfolio {
 
 		if (symbol != null) {
 			for (int i = 0; i < portfolioSize; i++) {
-				if (stocks[i].getSymbol().equals(symbol)) {
+				if (stockStatus[i].getSymbol().equals(symbol)) {
 					return i;
 				}
 			}
@@ -111,9 +102,7 @@ public class Portfolio {
 		sellStock (symbol, -1);
 
 		if (portfolioSize >= 1) { 
-			stocks[index] = stocks[portfolioSize - 1];
 			stockStatus[index] = stockStatus[portfolioSize - 1];
-			stocks[portfolioSize-1] = null;
 			stockStatus[portfolioSize - 1] = null;
 			portfolioSize--;
 		}
@@ -140,17 +129,17 @@ public class Portfolio {
 			return false;
 		}
 
-		if (quantity > stockStatus[index].stockQuantity) {
-			System.out.println("Invalid quantity entered. your stock quantity is " + stockStatus[index].stockQuantity);
+		if (quantity > stockStatus[index].getStockQuantity()) {
+			System.out.println("Invalid quantity entered. your stock quantity is " + stockStatus[index].getStockQuantity());
 			return false;
 		}
 
 		if (quantity == -1) {
-			quantity = stockStatus[index].stockQuantity;
+			quantity = stockStatus[index].getStockQuantity();
 		}
 
-		updateBalance(quantity * stockStatus[index].getCurrentBid());
-		stockStatus[index].stockQuantity -= quantity;
+		updateBalance(quantity * stockStatus[index].getBid());
+		stockStatus[index].setStockQuantity(stockStatus[index].getStockQuantity() - quantity);
 
 		return true;
 	}
@@ -169,18 +158,18 @@ public class Portfolio {
 			System.out.println("The stock " + symbol + " was not found.");
 			return false;
 		}
-		else if (quantity < -1 || stockStatus[index].getCurrentAsk() * quantity > balance) {
+		else if (quantity < -1 || stockStatus[index].getAsk() * quantity > balance) {
 			System.out.println("Not enough balance. Your balance is " + balance + 
-					", whereas the amount is " + stockStatus[index].getCurrentAsk() * quantity);
+					", whereas the amount is " + stockStatus[index].getAsk() * quantity);
 			return false;
 		}
 
 		if (quantity == -1) {
-			quantity = (int)(balance / stockStatus[index].getCurrentAsk());
+			quantity = (int)(balance / stockStatus[index].getAsk());
 		}
 
-		stockStatus[index].stockQuantity += quantity;
-		balance -= stockStatus[index].getCurrentAsk() * quantity;
+		stockStatus[index].setStockQuantity(stockStatus[index].getStockQuantity() + quantity);
+		balance -= stockStatus[index].getAsk() * quantity;
 
 		return true;	}
 
@@ -193,7 +182,7 @@ public class Portfolio {
 		float totalStocksValue = 0;
 
 		for (int i = 0; i < portfolioSize; i++) {
-			totalStocksValue += stockStatus[i].getStockQuantity() * stockStatus[i].getCurrentBid();
+			totalStocksValue += stockStatus[i].getStockQuantity() * stockStatus[i].getBid();
 		}
 		return totalStocksValue;
 	}
@@ -212,10 +201,6 @@ public class Portfolio {
 	 */
 	public float getTotalValue() {
 		return FinalBalance() + getStocksValue();
-	}
-
-	public Stock[] getStocks() {
-		return stocks;	
 	}
 
 	public StockStatus[] getstockStatus() {
@@ -262,126 +247,12 @@ public class Portfolio {
 		String res = "<h1>" + title + "</h1>" + "<br>";
 
 		for(int i = 0; i < getPortfolioSize() ; i++) {
-			res += stocks[i].getHtmlDescription() + "<br>" ;
+			res += stockStatus[i].getHtmlDescription() + "<br>" ;
 		}
 		res += "<br>" +"<b>" + "Total Portfolio Value: " + "</b>" + getTotalValue() + "$" + "<br>" +
 				"<b>" + "Total Stocks value: " + "</b>" + getStocksValue() + "$" + "<br>" +
 				"<b>" + "Balance: " + "</b>" + FinalBalance() + "$"; 
 
 		return res;
-	}
-
-	/**
-	 *  Inner class that contains several details concerning a specific stock.
-	 *  It would determine whether to buy, sell or do nothing with the stock, as it
-	 *  takes into account the stock parameters: symbol, bid, ask, recommendation, quantity,
-	 *  and its date.
-	 */
-	public class StockStatus {
-		private String symbol;
-		private float currentBid, currentAsk;
-		private Date date;
-		ALGO_RECOMMENDATION recommendation;
-		private int stockQuantity;
-
-		/**
-		 * Stock Status c'tor
-		 * @param symbol
-		 * @param ask
-		 * @param bid
-		 * @param date
-		 * @param doNothing
-		 * @param quantity
-		 */
-		public StockStatus(String symbol, float ask, float bid, Date date,
-				ALGO_RECOMMENDATION recommendation, int quantity) {
-			setSymbol(symbol);
-			setCurrentAsk(ask);
-			setCurrentBid(bid);
-			setDate(date);
-			setRecommendation(recommendation);
-			setStockQuantity(quantity);
-		}
-
-		/**
-		 * Initializes members in StockStatus
-		 */
-		public StockStatus (){
-			symbol = "";
-			currentBid = 0;
-			currentAsk = 0;
-			date = new Date();
-			recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
-			stockQuantity = 0;
-		}
-		/**
-		 * StockStatus copy c'tor
-		 * @param stock
-		 */
-		public StockStatus(StockStatus Stock) {
-			this(Stock.getSymbol(), Stock.getCurrentAsk(), Stock.getCurrentBid(),
-					Stock.getDate(), Stock.getRecommendation(), Stock.getStockQuantity());
-		}
-
-		/**
-		 * StockStatus c'tor, receives stock's details and updates the stock Status array.
-		 * @param stock
-		 */
-		public StockStatus(Stock stock) {
-			this.symbol = stock.getSymbol();
-			this.currentBid = stock.getBid();
-			this.currentAsk = stock.getAsk();
-			this.date = new Date (stock.getDate().getTime());
-			this.recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
-			this.stockQuantity = 0;
-		}
-
-		public String getSymbol() {
-			return symbol;
-		}
-
-		public void setSymbol(String symbol) {
-			this.symbol = symbol;
-		}
-
-		public float getCurrentBid() {
-			return currentBid;
-		}
-
-		public void setCurrentBid(float currentBid) {
-			this.currentBid = currentBid;
-		}
-
-		public float getCurrentAsk() {
-			return currentAsk;
-		}
-
-		public void setCurrentAsk(float currentAsk) {
-			this.currentAsk = currentAsk;
-		}
-
-		public Date getDate() {
-			return date;
-		}
-
-		public void setDate(Date date) {
-			this.date = date;
-		}
-
-		public ALGO_RECOMMENDATION getRecommendation() {
-			return recommendation;
-		}
-
-		public void setRecommendation(ALGO_RECOMMENDATION recommendation) {
-			this.recommendation = recommendation;
-		}
-
-		public int getStockQuantity() {
-			return stockQuantity;
-		}
-
-		public void setStockQuantity(int stockQuantity) {
-			this.stockQuantity = stockQuantity;
-		}
 	}
 }
