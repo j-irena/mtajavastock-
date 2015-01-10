@@ -5,7 +5,8 @@ import java.util.Date;
 /**
  * Definition of a stock and it's setters and getters.
  * 
- * @author Irena Yakobovich date 25th of November 2014
+ * @author Irena Yakobovich
+ * @date 25th of November 2014
  */
 
 public class Stock {

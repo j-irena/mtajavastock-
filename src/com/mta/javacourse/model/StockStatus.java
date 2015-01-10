@@ -1,7 +1,5 @@
 package com.mta.javacourse.model;
 
-import java.util.Date;
-
 import com.mta.javacourse.model.Portfolio.ALGO_RECOMMENDATION;
 
 /**
@@ -21,10 +19,6 @@ public class StockStatus extends Stock {
 	 */
 	public StockStatus(Stock stock) {
 		super(stock);
-		setSymbol(stock.getSymbol());
-		setBid(stock.getBid());
-		setAsk(stock.getAsk());
-		setDate(new Date (stock.getDate().getTime()));
 		this.recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
 		this.stockQuantity = 0;
 	}
@@ -33,14 +27,6 @@ public class StockStatus extends Stock {
 	 * StockStatus copy c'tor
 	 * @param stock
 	 */
-	public StockStatus(StockStatus stock) {
-		super(stock);
-		stock.getSymbol();
-		stock.getAsk();
-		stock.getBid();
-		stock.getDate(); stock.getRecommendation();
-		stock.getStockQuantity();
-	}
 
 	public ALGO_RECOMMENDATION getRecommendation() {
 		return recommendation;

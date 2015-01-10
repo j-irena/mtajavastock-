@@ -3,21 +3,32 @@ package com.mta.javacourse.service;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.mta.javacourse.exception.BalanceException;
+import com.mta.javacourse.exception.InvalidQuantityException;
+import com.mta.javacourse.exception.PortfolioFullException;
+import com.mta.javacourse.exception.StockAlreadyExistsException;
+import com.mta.javacourse.exception.StockNotExistException;
 import com.mta.javacourse.model.Portfolio;
 import com.mta.javacourse.model.Stock;
 
 /**
  * @author Irena Yakobovich
  * date 3rd of December 2014
- *
  */
-public class PortfolioService {
+public class PortfolioService  {
 
-	/** 
+	/**
 	 * Setting the date to 15th of November 2014
 	 * @return myPortfolio, that contains each added stock.
+	 * @throws StockAlreadyExistsException
+	 * @throws PortfolioFullException
+	 * @throws BalanceException
+	 * @throws StockNotExistException
+	 * @throws InvalidQuantityException
 	 */
-	public Portfolio getPortfolio() {
+	public Portfolio getPortfolio() throws StockAlreadyExistsException, PortfolioFullException,
+	BalanceException, StockNotExistException, InvalidQuantityException {
+		
 		Portfolio myPortfolio = new Portfolio(); 
 		Calendar calendar = Calendar.getInstance(); 
 		calendar.set(2014, 10, 15);
@@ -40,12 +51,16 @@ public class PortfolioService {
 
 		Stock st3 = new Stock("CAAS", (float)20, (float)15.5, myDate);
 		myPortfolio.addStock(st3);
+		
+		Stock st4 = new Stock("CAAS", (float)20, (float)15.5, myDate);
+		myPortfolio.addStock(st4);
 
 		myPortfolio.buyStock("PIH", 20);
 		myPortfolio.buyStock("AAL", 30);
 		myPortfolio.buyStock("CAAS", 40);
 		myPortfolio.sellStock("AAL", -1);
 		myPortfolio.removeStock("CAAS");
+		
 
 		return myPortfolio;
 	}

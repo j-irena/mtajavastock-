@@ -1,13 +1,19 @@
 package com.mta.javacourse.model;
 
+import com.mta.javacourse.exception.BalanceException;
+import com.mta.javacourse.exception.InvalidQuantityException;
+import com.mta.javacourse.exception.PortfolioFullException;
+import com.mta.javacourse.exception.StockAlreadyExistsException;
+import com.mta.javacourse.exception.StockNotExistException;
+
 /**
  * Definition of stock portfolio: contains arrays of stocks and it's status. 
  * @author Irena Yakobovich
- * date 1st of December 2014 
+ * @date 1st of December 2014 
  */
 public class Portfolio {
 	private final static int MAX_PORTFOLIO_SIZE = 5;
-	enum ALGO_RECOMMENDATION{DO_NOTHING, BUY, SELL};
+	public enum ALGO_RECOMMENDATION{DO_NOTHING, BUY, SELL};
 	private StockStatus[] stockStatus;
 	private int portfolioSize;
 	private String title;
@@ -46,21 +52,24 @@ public class Portfolio {
 	/**
 	 * addStock receives a stock and adds it to stocks array.
 	 * Each stock increases portfolioSize by one, so that the next stock would
-	 * be placed in the next location of the stock array. 
+	 * be placed in the next location of the stock array.
+	 * @param stock
+	 * @throws StockAlreadyExistsException
+	 * @throws PortfolioFullException
 	 */
-	public void addStock(Stock stock){
+	public void addStock(Stock stock) throws StockAlreadyExistsException, PortfolioFullException {
 		String symbol = stock.getSymbol();
 
 		for (int i = 0; i < portfolioSize; i++) {
 			if (stockStatus[i].getSymbol() == symbol) {
 				System.out.println("The stock already exists in the portfolio.");
-				return;
+				throw new StockAlreadyExistsException(stock.getSymbol());
 			}
 		}
 
 		if (portfolioSize >= MAX_PORTFOLIO_SIZE) {
 			System.out.println("Not enough room in portfolio.");
-			return;
+			throw new PortfolioFullException();
 		}
 
 		else {
@@ -90,13 +99,15 @@ public class Portfolio {
 	/**
 	 * Removes the sold stock from the portfolio.
 	 * @param success/failure
+	 * @throws StockNotExistException 
+	 * @throws InvalidQuantityException 
 	 */
-	public Boolean removeStock(String symbol) {
+	public void removeStock(String symbol) throws StockNotExistException, InvalidQuantityException {
 
 		int index = findSymbolIndex(symbol);
 
 		if (index == -1) {
-			return false;
+			throw new StockNotExistException(symbol);
 		}
 
 		sellStock (symbol, -1);
@@ -105,79 +116,83 @@ public class Portfolio {
 			stockStatus[index] = stockStatus[portfolioSize - 1];
 			stockStatus[portfolioSize - 1] = null;
 			portfolioSize--;
-		}
-
-		else {
-			System.out.println("Cannot remove empty portfolio");
-			return false;
-		}
-		return true;
+		}	
 	}
 
 	/**
 	 * Sell stocks
 	 * @param symbol
-	 * @return
+	 * @param quantity
+	 * @throws StockNotExistException
+	 * @throws InvalidQuantityException
 	 */
-
-	public boolean sellStock (String symbol, int quantity) {
+	public void sellStock (String symbol, int quantity) throws StockNotExistException, InvalidQuantityException {
 
 		int index = findSymbolIndex(symbol);
 
-		if (index == -1 || quantity < -1 || quantity == 0) {
+		if (index == -1 ) {
+			System.out.println("Index not found!");
+			throw new StockNotExistException(symbol);
+		}
+
+		else if (quantity < -1 || quantity == 0) {
 			System.out.println("Invalid quantity");
-			return false;
+			throw new InvalidQuantityException();
 		}
 
-		if (quantity > stockStatus[index].getStockQuantity()) {
+		else if (quantity > stockStatus[index].getStockQuantity()) {
 			System.out.println("Invalid quantity entered. your stock quantity is " + stockStatus[index].getStockQuantity());
-			return false;
+			throw new InvalidQuantityException();
 		}
 
-		if (quantity == -1) {
+		else if (quantity == -1) {
 			quantity = stockStatus[index].getStockQuantity();
 		}
 
 		updateBalance(quantity * stockStatus[index].getBid());
 		stockStatus[index].setStockQuantity(stockStatus[index].getStockQuantity() - quantity);
 
-		return true;
 	}
 
 	/**
 	 * Buy Stocks
 	 * @param symbol
 	 * @param quantity
-	 * @return
+	 * @throws StockNotExistException
+	 * @throws InvalidQuantityException
+	 * @throws BalanceException
 	 */
-	public boolean buyStock (String symbol, int quantity) {
+	public void buyStock (String symbol, int quantity) throws StockNotExistException, InvalidQuantityException, BalanceException {
 
 		int index = findSymbolIndex(symbol);
 
 		if (index < 0) {
 			System.out.println("The stock " + symbol + " was not found.");
-			return false;
-		}
-		else if (quantity < -1 || stockStatus[index].getAsk() * quantity > balance) {
-			System.out.println("Not enough balance. Your balance is " + balance + 
-					", whereas the amount is " + stockStatus[index].getAsk() * quantity);
-			return false;
+			throw new StockNotExistException(symbol);
 		}
 
-		if (quantity == -1) {
+		else if (quantity < -1) {
+			System.out.println("Invalid quantity");
+			throw new InvalidQuantityException();
+		}
+
+		else if (stockStatus[index].getAsk() * quantity > balance) {
+			System.out.println("Not enough balance!");
+			throw new BalanceException(balance, stockStatus[index].getAsk(), quantity);
+		}
+
+		else if (quantity == -1) {
 			quantity = (int)(balance / stockStatus[index].getAsk());
 		}
 
 		stockStatus[index].setStockQuantity(stockStatus[index].getStockQuantity() + quantity);
 		balance -= stockStatus[index].getAsk() * quantity;
-
-		return true;	}
+	}
 
 	/**
 	 * Calculates portfolio value.
 	 * @returns total value
 	 */
-
 	public float getStocksValue() {
 		float totalStocksValue = 0;
 
@@ -191,7 +206,7 @@ public class Portfolio {
 	 * Calculates portfolio balance.
 	 * @returns balance
 	 */
-	public float FinalBalance() {
+	public float finalBalance() {
 		return balance;
 	}
 
@@ -200,7 +215,7 @@ public class Portfolio {
 	 * @returns Total value
 	 */
 	public float getTotalValue() {
-		return FinalBalance() + getStocksValue();
+		return finalBalance() + getStocksValue();
 	}
 
 	public StockStatus[] getstockStatus() {
@@ -251,7 +266,7 @@ public class Portfolio {
 		}
 		res += "<br>" +"<b>" + "Total Portfolio Value: " + "</b>" + getTotalValue() + "$" + "<br>" +
 				"<b>" + "Total Stocks value: " + "</b>" + getStocksValue() + "$" + "<br>" +
-				"<b>" + "Balance: " + "</b>" + FinalBalance() + "$"; 
+				"<b>" + "Balance: " + "</b>" + finalBalance() + "$"; 
 
 		return res;
 	}
