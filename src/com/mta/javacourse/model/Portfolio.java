@@ -18,7 +18,7 @@ public class Portfolio {
 	private int portfolioSize;
 	private String title;
 	private float balance;
-
+	
 	/** 
 	 * Stock portfolio contains an array of stocks and it's status.
 	 */
