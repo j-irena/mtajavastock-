@@ -39,6 +39,10 @@ public class Stock {
 		this(s.getSymbol(), s.getAsk(), s.getBid(), s.getDate());
 	}
 
+	public Stock() {
+		this("", 0, 0, new Date(0));
+	}
+
 	public String getSymbol() {
 		return symbol;
 	}

@@ -17,17 +17,19 @@ public class StockStatus extends Stock {
 	 * StockStatus c'tor, receives stock's details and updates the stock Status array.
 	 * @param stock
 	 */
-	public StockStatus(Stock stock) {
-		super(stock);
+
+	public StockStatus() {
+		super();
 		this.recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
-		this.stockQuantity = 0;
+		stockQuantity = 0;
 	}
 
-	/**
-	 * StockStatus copy c'tor
-	 * @param stock
-	 */
-
+	public StockStatus(Stock stock) {
+		super(stock);
+		recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
+		stockQuantity = 0;
+	}
+	
 	public ALGO_RECOMMENDATION getRecommendation() {
 		return recommendation;
 	}
