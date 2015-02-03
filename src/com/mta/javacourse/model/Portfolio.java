@@ -72,23 +72,23 @@ public class Portfolio {
 	 * @throws PortfolioFullException
 	 */
 	public void addStock(Stock stock) throws StockAlreadyExistsException, PortfolioFullException {
-		String symbol = stock.getSymbol();
-
-		for (int i = 0; i < portfolioSize; i++) {
-			if (stockStatus.get(i).getSymbol() == symbol) {
-				System.out.println("The stock already exists in the portfolio.");
+		
+		if(stockStatus.size() == SIZE) {
+		
+			System.out.println("Can’t add new stock, portfolio can have only "+ SIZE +" stocks");
+			throw new PortfolioFullException();
+		}
+		
+		for (int i = 0; i < stockStatus.size(); i++) {
+			
+			if (stockStatus.get(i).getSymbol().equals(stock.getSymbol())) {
+				System.out.println(stockStatus.get(i).getSymbol() + " Already exists in the portfolio");
+				
 				throw new StockAlreadyExistsException(stock.getSymbol());
 			}
 		}
-
-		if (portfolioSize >= SIZE) {
-			System.out.println("Not enough room in portfolio.");
-			throw new PortfolioFullException();
-		}
-
-		else {
-			stockStatus.add(new StockStatus());
-		}
+		
+		stockStatus.add(new StockStatus(stock));	
 	}
 
 	/**
@@ -196,14 +196,14 @@ public class Portfolio {
 			quantity = (int) (balance / stockStatus.get(index).getAsk());
 		}
 					
-		float money_needed = quantity * (stockStatus.get(index).getAsk()); 					
-		if (money_needed > balance)
+		float price = quantity * (stockStatus.get(index).getAsk()); 					
+		if (price > balance)
 		{
 			System.out.println("Not enough balance to complete purchase");
 			throw new BalanceException(symbol);
 		}
 					
-		updateBalance(-money_needed);
+		updateBalance(-price);
 		stockStatus.get(index).setStockQuantity(stockStatus.get(index).getStockQuantity() + quantity);
 	}
 	
